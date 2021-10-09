@@ -55,10 +55,6 @@ const Home: NextPage = () => {
     calculationType: null,
     result: null
   })
-
-  console.log('numCalculatorState',numCalculatorState);
-  
-
   const inputNumber = get(numCalculatorState, 'inputNumber')
   const calculationType = get(numCalculatorState, 'calculationType')
   const result = get(numCalculatorState, 'result').toString()

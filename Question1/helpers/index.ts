@@ -5,3 +5,10 @@ export const inputNumberRescrictor = (inputNumber: string) => {
     }
     return Math.round(inputNumberCal)
 }
+
+
+export const findResult = (inputNumber:string, calculationType: string) => {
+    console.log('inputNumber',inputNumber);
+    console.log('calculationType',calculationType);
+    
+}

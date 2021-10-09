@@ -2,7 +2,7 @@ import { OutlinedInput, makeStyles, InputLabel, MenuItem, Select } from '@materi
 import { get } from 'lodash'
 import type { NextPage } from 'next'
 import React, { ChangeEvent, useReducer } from 'react'
-import { inputNumberRescrictor } from '../helpers'
+import { findResult, inputNumberRescrictor } from '../helpers'
 
 
 const useStyles = makeStyles({
@@ -19,8 +19,8 @@ const useStyles = makeStyles({
     width: 300
   },
   inputNumberForm: {
-    width:150,
-    height:50
+    width: 150,
+    height: 50
   }
 })
 
@@ -28,6 +28,7 @@ const useStyles = makeStyles({
 enum numCalculatorActions {
   UPDATE_INPUT_NUMBER = 'UPDATE_INPUT_NUMBER',
   UPDATE_CALCULATION_TYPE = 'UPDATE_CALCULATION_TYPE',
+  FIND_RESULT = 'FIND_RESULT'
 }
 interface numCalculatorAction {
   type: numCalculatorActions,
@@ -40,6 +41,9 @@ const numCalculatorReducer = (state: any, action: numCalculatorAction) => {
       return { ...state, inputNumber: inputNumberRescrictor(action.payload) }
     case numCalculatorActions.UPDATE_CALCULATION_TYPE:
       return { ...state, calculationType: action.payload }
+
+    case numCalculatorActions.FIND_RESULT:
+      return { ...state, result: findResult(state.inputNumber, state.calculationType) }
     default:
       return state
   }
@@ -54,13 +58,24 @@ const Home: NextPage = () => {
 
   const inputNumber = get(numCalculatorState, 'inputNumber')
   const calculationType = get(numCalculatorState, 'calculationType')
+  const result = get(numCalculatorState, 'result')
 
   const classes = useStyles()
   const changeInputNumberHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    // update input number in the store
     numCalculatorDispatch({ type: numCalculatorActions.UPDATE_INPUT_NUMBER, payload: e.target.value })
+
+    // re-calculating the result based on values inside the store
+    numCalculatorDispatch({ type: numCalculatorActions.FIND_RESULT, payload: '' })
+
   }
   const changeCalculationHandler = (e: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
+
+    // update calculation type in the store
     numCalculatorDispatch({ type: numCalculatorActions.UPDATE_CALCULATION_TYPE, payload: e.target.value as string })
+
+    // re-calculating the result based on values inside the store
+    numCalculatorDispatch({ type: numCalculatorActions.FIND_RESULT, payload: '' })
   }
   return (
     <div className={classes.root}>
@@ -86,7 +101,7 @@ const Home: NextPage = () => {
           <MenuItem value={'IsFibanacci'}>IsFibanacci</MenuItem>
         </Select>
       </div>
-      <div className={classes.thridColumn}>third column</div>
+      <div className={classes.thridColumn}>{result}</div>
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { OutlinedInput, makeStyles, InputLabel, MenuItem, Select } from '@material-ui/core'
-import { get } from 'lodash'
+import { get, isEmpty } from 'lodash'
 import type { NextPage } from 'next'
 import React, { ChangeEvent, useReducer } from 'react'
 import { findResult, inputNumberRescrictor } from '../helpers'
@@ -51,30 +51,40 @@ const numCalculatorReducer = (state: any, action: numCalculatorAction) => {
 
 const Home: NextPage = () => {
   const [numCalculatorState, numCalculatorDispatch] = useReducer(numCalculatorReducer, {
-    inputNumber: null,
-    calculationType: null,
-    result: null
+    inputNumber: 0,
+    calculationType: 'isPrime',
+    result: false
   })
+  console.log('numCalculatorState', numCalculatorState);
+
   const inputNumber = get(numCalculatorState, 'inputNumber')
+  console.log('inputNumber',inputNumber);
+  console.log('typeof inputNumber',typeof inputNumber);
+  
   const calculationType = get(numCalculatorState, 'calculationType')
-  const result = get(numCalculatorState, 'result').toString()
+  console.log('calculationType',calculationType);
+
+  const result = (typeof get(numCalculatorState, 'result') === 'boolean') ? get(numCalculatorState, 'result').toString() : ''
+  console.log('result',result);
 
   const classes = useStyles()
   const changeInputNumberHandler = (e: ChangeEvent<HTMLInputElement>) => {
     // update input number in the store
     numCalculatorDispatch({ type: numCalculatorActions.UPDATE_INPUT_NUMBER, payload: e.target.value })
 
-    // re-calculating the result based on values inside the store
-    numCalculatorDispatch({ type: numCalculatorActions.FIND_RESULT, payload: '' })
-
+    // re-calculating the result based on values inside the store if both value is not empty
+    if ((typeof inputNumber === 'number') && !isEmpty(calculationType)) {
+      numCalculatorDispatch({ type: numCalculatorActions.FIND_RESULT, payload: '' })
+    }
   }
   const changeCalculationHandler = (e: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
-
     // update calculation type in the store
     numCalculatorDispatch({ type: numCalculatorActions.UPDATE_CALCULATION_TYPE, payload: e.target.value as string })
 
-    // re-calculating the result based on values inside the store
-    numCalculatorDispatch({ type: numCalculatorActions.FIND_RESULT, payload: '' })
+    // re-calculating the result based on values inside the store if both value is not empty
+    if ((typeof inputNumber === 'number') && !isEmpty(calculationType)) {
+      numCalculatorDispatch({ type: numCalculatorActions.FIND_RESULT, payload: '' })
+    }
   }
   return (
     <div className={classes.root}>

@@ -17,7 +17,7 @@ export const isPrime = (num: number) => {
 }
 
 export const isSquare = (n: number) => {
-    return n > 0 && Math.sqrt(n) % 1 === 0;
+    return Math.sqrt(n) % 1 === 0;
 };
 
 /** 
@@ -39,6 +39,6 @@ export const findResult = (inputNumber: number, calculationType: string) => {
     if (calculationType === 'isPrime') {
         return isPrime(inputNumber)
     }
-    // fibo check
+    // fibo check (if not prime, will be fibo calculation)
     return isInFiboSequence(inputNumber)
 }

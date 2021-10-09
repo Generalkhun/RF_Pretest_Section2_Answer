@@ -90,10 +90,10 @@ const Home: NextPage = () => {
       <div className={classes.secondColumn}>
         <InputLabel id="calculation-type-label">Calculation Type</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
+          labelId="calculation-type-label"
           id="calculation-type-label"
           value={calculationType}
-          label="Age"
+          label="calculation type"
           onChange={changeCalculationHandler}
         >
           <MenuItem value={'isPrime'}>isPrime</MenuItem>
